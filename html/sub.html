@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0">
+    <title>Love</title>
+    <style>
+        body, html {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: #FF69B4;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .wave {
+            display: grid;
+            grid-template-columns: repeat(60, 1fr);
+            grid-template-rows: repeat(40, 1fr);
+            height: 100%;
+            width: 100%;
+            font-size: 20px;
+            text-align: center;
+            line-height: 40px;
+        }
+
+        .wave span {
+            animation: pulseAnimation 2s ease-in-out infinite;
+            opacity: 0;
+            display: inline-block;
+            animation-timing-function: ease-in-out;
+        }
+
+        @keyframes pulseAnimation {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+        }
+
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="wave">
+        <!-- JavaScript will populate this grid with "L", "O", "V", "E" -->
+    </div>
+    <script>
+        const letters = ['L', 'O', 'V', 'E'];
+        const waveContainer = document.querySelector('.wave');
+
+        // Create a grid of letters with random animations
+        for (let i = 0; i < 2400; i++) {
+            const letter = document.createElement('span');
+            letter.innerText = letters[Math.floor(Math.random() * letters.length)];
+
+            // Apply random animation delay and duration to each letter
+            const randomDelay = Math.random() * 2.5;  // Random delay between 0 and 3 seconds
+            const randomDuration = Math.random() * 2 + 1;  // Random duration between 1 and 3 seconds
+
+            letter.style.animationDelay = `${randomDelay}s`;
+            letter.style.animationDuration = `${randomDuration}s`;
+
+            // Randomize the font size and position within the grid
+            const randomFontSize = Math.floor(Math.random() * 20) + 6;  // Random font size between 20px and 60px
+            letter.style.fontSize = `${randomFontSize}px`;
+
+            waveContainer.appendChild(letter);
+        }
+    </script>
+</body>
+</html>
