@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Love You Forever</title>
+  <style>
+    /* 设置iframe的位置和尺寸 */
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      z-index: 1; /* 使嵌入的页面在底层 */
+    }
+
+    /* 对第一个HTML文件中的动画样式进行定位 */
+    .heart-animation {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2; /* 使第一个动画在上层 */
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 第一个动画：爱心飘动 -->
+  <canvas class="heart-animation" id="heartCanvas"></canvas>
+
+  <!-- 第二个HTML文件通过iframe嵌入 -->
+  <iframe src="html/sub.html"></iframe>
+
+  <script>
+    // 获取canvas元素
+    const canvas = document.getElementById('heartCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // 设置canvas的尺寸
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // 生成随机数的函数
+    function getRandom(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    // 画心形函数
+    function drawHeart(x, y, size) {
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.bezierCurveTo(x - size / 2, y - size / 2, x - size, y + size / 3, x, y + size);
+      ctx.bezierCurveTo(x + size, y + size / 3, x + size / 2, y - size / 2, x, y);
+      ctx.closePath();
+    }
+
+    // 爱心类
+    class Heart {
+      constructor() {
+        this.x = getRandom(0, canvas.width); // 初始x坐标
+        this.y = canvas.height + getRandom(30, 100); // 初始y坐标（从画布底部随机出现）
+        this.size = getRandom(15, 30); // 爱心大小
+        this.speed_Y = getRandom(2, 7); // 飘动速度
+        this.speed_X = getRandom(1, 3); // 飘动横向速度
+        this.index = getRandom(0, 21); // 随机索引
+        this.endY = getRandom(0 , canvas.height / 2); // 随机终点Y坐标
+        this.alpha = getRandom(0.2, 1); // 随机透明度，0.3到1之间
+      }
+
+      // 更新爱心的位置
+      update() {
+        if (this.y > this.endY) {
+          this.y -= this.speed_Y; // 使爱心从下向上移动
+        } else {
+          this.y = canvas.height + this.size; // 如果到达终点，重新从底部开始
+        }
+        if (this.index <=10){
+          this.x += this.speed_X; // 使爱心左右飘动
+          this.index += 1;
+        } else {
+          this.x -= this.speed_X;
+          this.index += 1;
+          if (this.index >= 22){
+            this.index = 0;
+          }
+        }
+      }
+
+      // 绘制爱心
+      draw() {
+        // 设置随机透明度
+        ctx.fillStyle = `rgba(255, 0, 0, ${this.alpha})`; // 红色，透明度根据alpha属性
+        drawHeart(this.x, this.y, this.size);
+        ctx.fill(); // 填充心形
+      }
+    }
+
+    // 创建多个爱心实例
+    const hearts = [];
+    for (let i = 0; i < 30; i++) {
+      hearts.push(new Heart());
+    }
+
+    // 动画循环函数
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // 清空画布
+      for (let i = 0; i < hearts.length; i++) {
+        hearts[i].update(); // 更新位置
+        hearts[i].draw();   // 绘制爱心
+      }
+      requestAnimationFrame(animate); // 重复动画
+    }
+
+    // 启动动画
+    animate();
+  </script>
+
+</body>
+</html>
